@@ -42,6 +42,7 @@ func GetPoint(cardOnhand []string) int {
 func DrawCard(shuffledCards *[]string) string {
 	getCard := *shuffledCards
 	*shuffledCards = getCard[1:]
+
 	return getCard[0]
 }
 
@@ -60,6 +61,7 @@ func DealOutCards(game *[]model.Player, shuffledCards *[]string) {
 func ShuffleCard(allCard [52]string) []string {
 	shuffledCards := []string{}
 	rand.Seed(time.Now().UnixNano())
+	
 	for i := 0; i < 52; i++ {
 		shuffledCards = append(shuffledCards, allCard[rand.Intn(len(allCard)-1)])
 	}

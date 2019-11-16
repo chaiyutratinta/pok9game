@@ -32,19 +32,20 @@ func GetReward(game *[]model.Player, amountPerRound int, files *os.File) {
 	playerAmount := len(getGame)
 	leadIdx := 0
 	leadPoint := 0
+	var leadMoney *int
 
 	for idx, player := range getGame {
 		if player.Lead {
 			leadPoint = utils.GetPoint(player.Card)
 			leadIdx = idx
+			leadMoney = &getGame[idx].Money
 		}
 	}
-
-	leadMoney := &getGame[leadIdx].Money
 
 	for idx := 0; idx < playerAmount; idx++ {
 		playerMoney := &getGame[idx].Money
 		playPoint := utils.GetPoint(getGame[idx].Card)
+
 		if !getGame[idx].Lead {
 			str := fmt.Sprintf("%d vs %d | cards: %v ", leadPoint, playPoint, getGame[idx].Card)
 			fmt.Print(str)
@@ -61,7 +62,6 @@ func GetReward(game *[]model.Player, amountPerRound int, files *os.File) {
 			fmt.Print(str2)
 			files.WriteString(str2)
 		}
-		
 		
 		playerCard := &getGame[idx].Card
 		*playerCard = []string{}
