@@ -1,16 +1,18 @@
 package utils
 
 import (
-	"strings"
-	"strconv"
-	"pok9game/model"
 	"math/rand"
+	"pok9game/model"
+	"strconv"
+	"strings"
+	"time"
 	// "fmt"
 )
 
 //GetPoint is calculate point on hand of player
-func GetPoint(cardOnhand []string) int{
+func GetPoint(cardOnhand []string) int {
 	sum := 0
+
 	for i := 0; i < len(cardOnhand); i++ {
 		removeFirstAlphabet := strings.Split(cardOnhand[i], "")
 		joinNum := strings.Join(removeFirstAlphabet[1:], "")
@@ -25,17 +27,42 @@ func GetPoint(cardOnhand []string) int{
 
 	sumStr := strconv.Itoa(sum)
 	getFinaly := strings.Split(sumStr, "")
-	almostFinaly := strings.Join(getFinaly[len(getFinaly) - 1:len(getFinaly)], "")
+	almostFinaly := strings.Join(getFinaly[len(getFinaly)-1:len(getFinaly)], "")
 	reallyFinaly, err := strconv.Atoi(almostFinaly)
+
 	if err != nil {
 		// fmt.Println(err)
 		return 0
 	}
+
 	return reallyFinaly
 }
 
 //DrawCard for ...
-func DrawCard(player *model.Player, cardOnhand []string) {
-  allCard := []string{"a1","a2","a3","a4","a5","a6","a7","a8","a9","a10","aj","aq","ak","b1","b2","b3","b4","b5","b6","b7","b8","b9","b10","bj","bq","bk","c1","c2","c3","c4","c5","c6","c7","c8","c9","c10","cj","cq","ck","d1","d2","d3","d4","d5","d6","d7","d8","d9","d10","dj","dq","dk",}
-  player.Card = append(cardOnhand, allCard[rand.Intn(52)])
+func DrawCard(shuffledCards *[]string) string {
+	getCard := *shuffledCards
+	*shuffledCards = getCard[1:]
+	return getCard[0]
+}
+
+//DealOutCards for deal card each player
+func DealOutCards(game *[]model.Player, shuffledCards *[]string) {
+	getGame := *game
+	for onHand := 0; onHand < 2; onHand++ {
+		for idx := 0; idx < len(getGame); idx++ {
+			card := &getGame[idx].Card
+			*card = append(*card, DrawCard(shuffledCards))
+		}
+	}
+}
+
+//ShuffleCard ...
+func ShuffleCard(allCard [52]string) []string {
+	shuffledCards := []string{}
+	rand.Seed(time.Now().UnixNano())
+	for i := 0; i < 52; i++ {
+		shuffledCards = append(shuffledCards, allCard[rand.Intn(len(allCard)-1)])
+	}
+
+	return shuffledCards
 }

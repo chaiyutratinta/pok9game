@@ -6,5 +6,4 @@ type Player struct {
 	Money int
 	Lead bool
 	Card []string
-	Total int
 }
